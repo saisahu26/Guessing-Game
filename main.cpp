@@ -1,4 +1,4 @@
-// title 
+// Zuul
 
 //  Main.cpp
 
@@ -10,6 +10,7 @@
 
 //
 
+//calling from c++ library 
 #ifndef Room_h
 
 #define Room_h
@@ -30,7 +31,7 @@
 
 using namespace std;
 
-class Exit {
+class Exit { //exit class to declare all of the possible movements
 public:
   bool north;
   bool east;
@@ -57,21 +58,21 @@ public:
   }
 };
   
-vector<Room*> roomLs;
-map<Room*, Exit> gMap;
-map<Item*, Room*> iMap;
-map<Item*, Room*> dropMap;
+vector<Room*> roomLs; //list of room vectors
+map<Room*, Exit> gMap; //list of the room with their exits
+map<Item*, Room*> iMap; //list of the items with their rooms
+map<Item*, Room*> dropMap; //list of the sropped items
 
-void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap); 
-void move(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap);
-
-
+void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap); //the createRoom function which sets and creates all of the rooms 
+void move(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap); //the move function where all the commands occur
 
 
-int main(){
 
-       // vector<Item> inventoryLs;
 
+int main(){ //main function where everything is ran and called from
+
+  cout << "Welcome to the Island, collect items and get to Shifty Shaft, only from there can you win the game!" << endl;
+  cout << "Travel using the commands: north, south, east and west. Pick up and drop items or quit the game when needed! " << endl;
 	createRoom(roomLs, gMap, iMap);
 	move(roomLs, gMap, iMap);
         return 0;
@@ -86,6 +87,7 @@ int main(){
 
 void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap) {
 
+  //declaring and initializing all of the rooms
     char* title1;
 
     title1 = new char [80];
@@ -176,7 +178,8 @@ void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*>
 
     strcpy(title15, "Shifty Shafts");
 
-    
+
+    //setting values and names to all of the rooms 
 
     Room* room1 = new Room(title1);
 
@@ -208,6 +211,8 @@ void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*>
 
     Room* room15 = new Room(title15);
 
+    //pushing the rooms into the roomLs vector
+
     roomLs.push_back(room1);
     roomLs.push_back(room2);
     roomLs.push_back(room3);
@@ -224,16 +229,9 @@ void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*>
     roomLs.push_back(room14);
     roomLs.push_back(room15);
 
-    cout << " Size " << roomLs.size() << endl;
     vector<Room*>::iterator it;
 
-    // for (auto it : roomLs ) {
-
-    
-    // cout << " Name of Room " << it->getName() << endl;
-
-    // }
-
+    //setting exits for each room based on the game map 
     Exit exit1;
     exit1.north = true;
     exit1.south = true;
@@ -337,6 +335,7 @@ void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*>
     //gMap.insert({room10, exit10});
     ptr = gMap.insert(pair<Room*, Exit>(room10, exit10));
 
+    //creating each item based on what room they are in
     char* item1;
     item1 = new char[80];
     strcpy(item1, "BoogieBomb");
@@ -378,47 +377,56 @@ void createRoom(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*>
     
 void move(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap){
 //    void move (vector<Room*> roomLs, vector<Room*> map) 
-      Room* currentRoom = roomLs.front();
-      cout << " RoomLs.front() " << currentRoom->getName() << endl;
+
+  // all of the variables used within 'move'
+  Room* currentRoom = roomLs.front();
       bool play = true;
       char move [80];
       char moveVar[80];
-      vector<char*> inventory;
-      
-      while(play) {
-	   cout << "currently in: " << currentRoom->getName() << endl;
-	   //for (auto i = iMap.begin(); i != iMap.end() ; i++) {
-	   // if (i->second  == location) {
-	   // cout << "There is:nside iMap " << (i->first)->getName() << endl;
-	   //}
-           //cout << " inside iMap looP" << endl;
-           //	}
+      map<Item*, Room*> inventory;
+      char* nullName = new char[80];
+      *nullName = ' ';
+ 
+      while(play) { //playing loop
            
-           
-           map<Room*, Exit>::iterator ptr;
+	//this loop prints out what room you are in and what it contains if anything 
+	bool emptyRoom = true; 
+           map<Item*, Room*>::iterator ptr1;
+           cout << "Currently in room " << currentRoom->getName() << endl ;
+           cout << "This room " << currentRoom->getName() << " contains " ;
+	   for(ptr1 = iMap.begin(); ptr1 != iMap.end(); ptr1++) {
+              if (strcmp((ptr1->second)->getName(), currentRoom->getName()) == 0) {
+                 if (strcmp(nullName, (ptr1->first)->getName()) != 0) {
+                    cout << (ptr1->first)->getName() << " , " ;
+                    emptyRoom = false;
+                 }
+                 else {
+                 }
+              }
+           }
+           if (emptyRoom == true) {
+	     cout << " no Item " << endl << endl; //if no items are there it prints 'no items'
+           }
+           else {
+                cout << " Item(s) " << endl << endl;
+           }
+ 
+           map<Room*, Exit>::iterator ptr; //this is the map vector which has all of the map componets such as the rooms
 	   for(ptr = gMap.begin(); ptr != gMap.end(); ptr++) {
-              //  cout << " inside gMap for loop room " << (i->first)->getName() << endl;
               if(ptr->first == currentRoom) {
 	         (ptr->second).showExit();
                  break;
               }
            }
+           cout << endl;
 
-           map<Item*, Room*>::iterator ptr1;
-	   for(ptr1 = iMap.begin(); ptr1 != iMap.end(); ptr1++) {
-              //  cout << " inside gMap for loop room " << (i->first)->getName() << endl;
-              if(ptr1->second == currentRoom) {
-                 cout << " This room " << (ptr->first)->getName() << endl;
-                 cout << " contains item " << (ptr1->first)->getName() << endl; 
-                 break;
-              }
-           }
-           
-	   cout << "please enter move, drop or pick" << endl;
+	   cout << "please enter move, drop, pick or quit" << endl; // the prompt that asks for the next movement 
 	   cin >> moveVar;
 	   cin.ignore(256 , '\n');
+
+	   //based on what you type (move, pick, drop) it prompts to that loop
 	   if(strcmp(moveVar, "move") ==0) {
-	         cout << "Where do you want to go" << endl;
+	     cout << "Where do you want to go" << endl; //which exit will you take?
 	         cin >> move;
 	         //cin.ignore(256, '\n');
 	         if(strcmp(move, "north") == 0) {
@@ -433,62 +441,97 @@ void move(vector<Room*> &roomLs, map<Room*, Exit> &gMap, map<Item*, Room*> &iMap
               	 else if(strcmp(move, "west") == 0) {
                       currentRoom = (ptr->second).westRoom;
                  }
+                 else {
+
+                      cout << " this exit not found from current room " << endl;
+                 }
              }
          // }
-           else if(strcmp(moveVar, "drop") ==0) {
+           else if(strcmp(moveVar, "drop") ==0) { //if drop, it first prints out your inventory, then procedes to remove it from the imap vector by removing that room and changig it to the room that you are in and by removing it from the inventory vector
 	      char* input = new char[80];
-	      vector<char*>:: iterator itr;
-	      cout << "enter what you want to drop" << endl;
+              cout << " inventory items are " ;
+	      for(auto ptr1 = inventory.begin(); ptr1 != inventory.end(); ptr1++) {
+                    cout << (ptr1->first)->getName() << "  " ;
+              }
+              cout << endl;
+
+	      cout << "enter what item from the inventory you want to drop" << endl;
 	      cin >> input;
 	      //cin.ignore(256, '\n');
-              int count = 0;
+              bool found = false;
 
-              cout << " after dropItem found " << inventory.size() << endl;
 
-	      for(int i = 0 ; i< inventory.size(); i++) {
-                cout << " inside inventory loop " << input << endl;
-                cout << " inside inventory loop " << inventory[i] << endl;
-                if (input == (*itr))  {
-                   cout << " inside inventory loop true " << endl;
+	      for(auto i = inventory.begin(); i != inventory.end(); i++) {
+                if (strcmp(input,(i->first)->getName())  == 0) {
+                   inventory.erase(i->first);
+                   pair <map<Item*, Room*>::iterator, bool> ptr2;
+                   Item* dropItem = new Item(input);
+                   Room* itemDropRoom = new Room((currentRoom)->getName());
+                   ptr2 = iMap.insert(pair<Item*, Room*>(dropItem, itemDropRoom));
+                   found = true;
                    break;
-                }
-                else {
-                     cout << " inside inventory loop false " << endl;
-                     count++;
                 }
 
 	      }
-	      for(auto i =iMap.begin(); i != iMap.end(); i++) {
-	           if(currentRoom == i->second) {
-	              inventory.erase(inventory.begin()+count);
-                      cout << " After drop " << (i->second)->getName() << endl;
-	              (i->first)->setName(input);
-                      cout << " After drop " << (i->second)->getName() << endl;
+              if (found == false) {
+		cout << " Drop item not found in the inventory " << endl; //if the entered item does not exist it prompts the user to enter again
+              }
 
-	           }
-             }
+              else  {
+
+                    if (inventory.size() != 0) {
+
+                        cout << " Current Item Inventory after drop -> " << endl;
+                    }
+
+	            for(auto i = inventory.begin(); i != inventory.end(); i++) {
+
+                        cout << (i->first)->getName() << " , " ; 
+                    }
+                    cout << endl;
+
+              }
+              
            }
-           else if(strcmp(moveVar, "pick") ==0) {
+           else if(strcmp(moveVar, "pick") ==0) { //if pick is chosen, it pushes the item into the inventory, removes it from imap and from that room
               char* input = new char[80];
               cout << "enter what do you want to pick" << endl;
               cin >> input;
               // cin.ignore(256, '\n');
               char* nullChar = new char[80];
               *nullChar = ' ';
-              cout << " input value " << input << endl;
+              bool found = false;
               for(auto i = iMap.begin(); i != iMap.end(); i++) {
 	          if(strcmp(input, (i->first)->getName())  == 0) {
-                       cout << " inside pick if true " << (i->first)->getName() << endl;
-	               inventory.push_back((i->first)->getName());
-                       cout << " Inside pick and before setName(NULL) " << (i->first)->getName() << endl;
+                       pair <map<Item*, Room*>::iterator, bool> ptr1;
+                       Item* dropItem = new Item((i->first)->getName());
+                       ptr1 = inventory.insert(pair<Item*, Room*>(dropItem, (i->second)));
                        (i->first)->setName(nullChar);
+                       found = true;
+                       break;
 	          }
               }
-        }
-	//}
+              if (found == false) {
 
+                 cout << " Pick item not found in the current Room " << endl;
+              }
+              else {
+                 cout << " Current Item Inventory after pick " << endl;
+	         for(auto i = inventory.begin(); i != inventory.end(); i++) {
+
+                     cout << (i->first)->getName() << " , " ; 
+                 }
+                 cout << endl;
+              }
+        }
+	   else if(strcmp(moveVar, "quit") ==0) { //if quit is entered it breaks form the game ending it
+
+             cout << " Game ended " << endl;
+             break;
+
+        }
 	if(currentRoom == roomLs[15]) {
-	  cout << "Victory Royale! You won the game!" <<endl;
+	  cout << "Victory Royale! You won the game!" <<endl; //when you enter room15 which is Shifty Shafts, the game prompts you to a win, ending it
 	  play = false;
 	}
       }

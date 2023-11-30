@@ -28,25 +28,24 @@ using namespace std;
 
 Item :: Item(char* name1) {
 
-    name = new char[80];
+  name = new char[80]; //sets name to a char array
 
-    strcpy(name, name1);
+  strcpy(name, name1); //copies name from the item name
 
  //   cout << " Inside Item Const " << endl;
 
 }
 
-char* Item :: getName() {
+char* Item :: getName() { //calls getName which returns the name of the item
 
- cout << " Inside Item getname " << name << endl;
+ //cout << " Inside Item getname " << name << endl;
  return name;
 }
 
-void Item :: setName(char* name1) {
+void Item :: setName(char* name1) { //cals setName which sets the name of the modified item
 
-    cout << " Inside Item setName() and before strcpy " << endl;
     strcpy(name, name1);
-    cout << " Inside Item setName() and after strcpy " << name << endl;
+    //cout << " Inside Item setName() and after strcpy " << name << endl;
 
     return;
 }

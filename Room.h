@@ -32,21 +32,21 @@ using namespace std;
 
 
 
-class Room {
+class Room { //creates class Room
 
 public:
 
-    Room(char* name);
+  Room(char* name); //creates the room function for the cpp file
 
-    char* getName();
+  char* getName(); //creates the getName function to return title
 
-    Room createRoom();
+  Room createRoom(); //createRoom function to create the list of rooms
 
     
 
 private:
 
-    char* title;
+  char* title; //char pointer for the title
 
     
 
